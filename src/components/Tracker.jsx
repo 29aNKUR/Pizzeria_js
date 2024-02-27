@@ -5,13 +5,13 @@ import { cancelOrder, updateOrderTime } from "../redux/pizzaSlice";
 import OrderDetails from "../lib/types";
 
 const Tracker = () => {
-  const orders = useSelector((state: RootState) => state.pizza.orders);
+  const orders = useSelector((state) => state.pizza.orders);
   const dispatch = useDispatch();
 
   useEffect(() => {
   const interval = setInterval(() => {
     orders.forEach((order) => {
-      const updatedTime: number = order.stage !== 'Order Picked' ? order.time + 1 : order.time;
+      const updatedTime = order.stage !== 'Order Picked' ? order.time + 1 : order.time;
       dispatch(updateOrderTime(order.orderId, updatedTime));
     });
   }, 1000);
@@ -20,11 +20,11 @@ const Tracker = () => {
 }, [dispatch, orders]); 
   
 
-  const handleCancelOrder = (orderId: string) => {
+  const handleCancelOrder = (orderId) => {
     dispatch(cancelOrder(orderId));
   };
 
-  const handleNextButtonClick = (orderId: string, currentStage: string) => {
+  const handleNextButtonClick = (orderId, currentStage) => {
     switch (currentStage) {
       case "Order Placed":
         dispatch(updateOrderTime(orderId, "Order in Making"));
@@ -40,7 +40,7 @@ const Tracker = () => {
     }
   };
 
-  const isStale = (order: OrderDetails) => order.time > 180;
+  const isStale = (order) => order.time > 180;
 
   const stages = [
     "Order Placed",
@@ -57,7 +57,7 @@ const Tracker = () => {
           <div key={stage}>
             <h1>{stage}</h1>
             {orders
-              .filter((order: OrderDetails) => order.stage === stage)
+              .filter((order) => order.stage === stage)
               .sort((a, b) => a.time - b.time)
               .map((order) => (
                 <div

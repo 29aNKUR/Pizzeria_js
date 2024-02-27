@@ -1,4 +1,3 @@
-import type { RootState } from "../redux/store";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { placeOrder } from "../redux/pizzaSlice";
@@ -6,10 +5,10 @@ import { placeOrder } from "../redux/pizzaSlice";
 const OrderForm = () => {
   
   const dispatch = useDispatch();
-  const orders = useSelector((state: RootState) => state.pizza.orders);
+  const orders = useSelector((state) => state.pizza.orders);
   const [order, setOrder] = useState({ type: "", size: "", base: "" });
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleInputChange = (event) => {
     const {name, value} = event.target;
     setOrder((prevOrder) => ({...prevOrder, [name]: value}));
   };

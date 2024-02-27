@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import OrderDetails from "../lib/types";
 
 const pizzaSlice = createSlice({
   name: "pizza",
   initialState: {
-    orders: [] as OrderDetails[],
+    orders: [],
     orderIdCounter: 0,
   },
   reducers: {
