@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { cancelOrder, updateOrderStage, updateOrderTime } from "../redux/pizzaSlice";
+import { formatTime } from "../utils";
 
 const Tracker = () => {
   const orders = useSelector((state) => state.pizza.orders);
   const dispatch = useDispatch();
-
+  
   useEffect(() => {
     const interval = setInterval(() => {
       orders.forEach((order) => {
@@ -14,32 +15,31 @@ const Tracker = () => {
         dispatch(updateOrderTime({ orderId: order.orderId, time: updatedTime }));
       });
     }, 1000);
-  
+
     return () => clearInterval(interval);
   }, [dispatch, orders]);
-  
 
   const handleCancelOrder = (orderId) => {
     dispatch(cancelOrder(orderId));
   };
 
   const handleNextButtonClick = (orderId, currentStage) => {
-  console.log("Clicked Next Button for Order ID:", orderId, "Current Stage:", currentStage);
+    console.log("Clicked Next Button for Order ID:", orderId, "Current Stage:", currentStage);
 
-  switch (currentStage) {
-    case "Order Placed":
-      dispatch(updateOrderStage({ orderId, stage: "Order in Making" }));
-      break;
-    case "Order in Making":
-      dispatch(updateOrderStage({ orderId, stage: "Order Ready" }));
-      break;
-    case "Order Ready":
-      dispatch(updateOrderStage({ orderId, stage: "Order Picked" }));
-      break;
-    default:
-      console.log("Unknown Stage:", currentStage);
-  }
-};
+    switch (currentStage) {
+      case "Order Placed":
+        dispatch(updateOrderStage({ orderId, stage: "Order in Making" }));
+        break;
+      case "Order in Making":
+        dispatch(updateOrderStage({ orderId, stage: "Order Ready" }));
+        break;
+      case "Order Ready":
+        dispatch(updateOrderStage({ orderId, stage: "Order Picked" }));
+        break;
+      default:
+        console.log("Unknown Stage:", currentStage);
+    }
+  };
 
   const isStale = (order) => order.time > 180;
 
@@ -59,7 +59,7 @@ const Tracker = () => {
             <h1 className="font-bold text-2xl">{stage}</h1>
             {orders
               .filter((order) => order.stage === stage)
-              .sort((a, b) => a.time - b.time)
+              .sort((a, b) => b.time - a.time)
               .map((order) => (
                 <div
                   key={order.orderId}
@@ -72,7 +72,7 @@ const Tracker = () => {
                   }`}
                 >
                   <p>Order Id: {order.orderId}</p>
-                  <p>Time Spent: {order.time} sec</p>
+                  <p>Time Spent: {formatTime(order.time)}</p>
                   {/* <p>
                     Time in current Stage: {order.time - (order.prevTime || 0)}{" "}
                     sec
@@ -80,7 +80,7 @@ const Tracker = () => {
                   <div className="flex justify-between mt-2 mb-2">
                     {order.stage !== "Order Picked" && (
                       <button
-                      className="bg-blue-800 text-white font-bold rounded px-2 py-1"
+                        className="bg-blue-800 text-white font-bold rounded px-2 py-1"
                         onClick={() =>
                           handleNextButtonClick(order.orderId, order.stage)
                         }
@@ -89,7 +89,10 @@ const Tracker = () => {
                       </button>
                     )}
                     {order.stage !== "Order Picked" && (
-                      <button   className="bg-red-500 text-white px-2 py-1 rounded" onClick={() => handleCancelOrder(order.orderId)}>
+                      <button
+                        className="bg-red-500 text-white px-2 py-1 rounded"
+                        onClick={() => handleCancelOrder(order.orderId)}
+                      >
                         Cancel
                       </button>
                     )}
@@ -99,20 +102,6 @@ const Tracker = () => {
               ))}
           </div>
         ))}
-
-        {/* <div className="border p-10 rounded-lg shadow-lg">
-          <h1>Order Placed</h1>
-
-        </div>
-        <div className="border p-10 rounded-lg shadow-lg">
-          <h1>Order in Making</h1>
-        </div>
-        <div className="border p-10 rounded-lg shadow-lg">
-          <h1>Order Ready</h1>
-        </div>
-        <div className="border p-10 rounded-lg shadow-lg">
-          <h1>Order Picked</h1>
-        </div> */}
       </div>
     </div>
   );

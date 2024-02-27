@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { cancelOrder } from '../redux/pizzaSlice';
+import { formatTime } from '../utils';
 
 const OrderSummary = () => {
   const orders = useSelector((state) => state.pizza.orders);
@@ -30,7 +31,7 @@ const OrderSummary = () => {
             <tr key={order.orderId} className="border">
               <td className="border p-2">{order.orderId}</td>
               <td className="border p-2">{order.stage}</td>
-              <td className="border p-2">{order.time} sec</td>
+              <td className="border p-2">{formatTime(order.time)}</td>
               <td className="border p-2">
                 {order.stage !== 'Order Picked' && (
                   <button
