@@ -1,9 +1,9 @@
 import "./App.css";
+import Footer from "./components/Footer";
 import Header from "./components/Header";
-import MainSection from "./components/MainSection";
 import OrderForm from "./components/OrderForm";
+import OrderSummary from "./components/OrderSummary";
 import Tracker from "./components/Tracker";
-
 function App() {
   return (
     <div>
@@ -13,7 +13,10 @@ function App() {
       </div>
       <Tracker />
       <div>
-        <MainSection />
+        <OrderSummary />
+      </div>
+      <div>
+        <Footer />
       </div>
     </div>
   );
